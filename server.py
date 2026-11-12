@@ -395,7 +395,9 @@ def identify_imdb(mid, text):
     r = http_json(f"https://v2.sg.media-imdb.com/suggestion/t/{iid}.json")
     c = next((x for x in r.get("d", []) if x.get("id") == iid), None)
     if not c: raise RuntimeError(f"IMDb returned nothing for {iid}")
-    return keyless_apply(mid, c)
+    meta = keyless_apply(mid, c)
+    with LOCK: meta["identified"] = True   # user-chosen: never replaced by automatic TMDB upgrade
+    return meta
 
 
 BROWSER_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
@@ -609,6 +611,7 @@ def generate_banners():
 def fetch_all_metadata():
     todo = [k for k, e in DB.items() if e.get("kind") == "movie" and not e.get("meta_tried") and
             (not e.get("meta") or (has_tmdb() and e["meta"].get("source") != "tmdb" and not e["meta"].get("edited")
+                                   and not e["meta"].get("identified")
                                    and not e.get("tmdb_upgrade_tried")))]
     for k in todo:
         if DB[k].get("meta"): DB[k]["tmdb_upgrade_tried"] = True
