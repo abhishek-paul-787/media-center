@@ -78,11 +78,11 @@ reopen PowerShell so the new programs are found. On Windows, use `python` instea
 ### 2b. Download Media Center
 
 ```bash
-git clone https://github.com/OWNER/media-center.git
+git clone https://github.com/abhishek-paul-787/media-center.git
 cd media-center
 ```
 
-Replace `OWNER/media-center` with the address of the repository you are using. No git?
+Replace `abhishek-paul-787/media-center` with the address of the repository you are using. No git?
 Click **Code → Download ZIP** on the GitHub page, unzip it, and open a terminal in that folder.
 
 ## 3. Tell it where your media is
