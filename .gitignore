@@ -1,0 +1,6 @@
+# Personal settings and API keys - never commit
+config.json
+# Generated library data, posters, subtitles
+data/
+__pycache__/
+*.pyc

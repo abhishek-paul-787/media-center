@@ -1,0 +1,15 @@
+{
+  "host": "127.0.0.1",
+  "port": 8765,
+  "site_name": "Media Center",
+  "tmdb_key": "",
+  "opensubtitles_key": "",
+  "opensubtitles_user": "",
+  "opensubtitles_pass": "",
+  "subtitle_languages": ["en", "es", "fr"],
+  "auto_subtitle_languages": ["en"],
+  "libraries": [
+    { "path": "~/Media/Movies", "kind": "movie" },
+    { "path": "~/Media/TV Shows", "kind": "tv" }
+  ]
+}
