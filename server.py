@@ -229,7 +229,10 @@ def scan(force_probe=False):
             continue
         STATUS.update(state="scanning", done=0, total=0, msg=f"Scanning {root.name}…")
         items += [(p, single, root, lib.get("kind", "auto")) for p, single in find_movies(root)]
-    if not items: return
+    if not items:
+        if STATUS.get("state") != "error":
+            STATUS.update(state="idle", msg="No videos found in your library folders (files under 20 MB are ignored)")
+        return
     STATUS.update(total=len(items), msg="Reading media info…")
     seen = set()
 

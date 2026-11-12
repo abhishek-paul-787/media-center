@@ -148,7 +148,7 @@ TV Shows/
       Breaking Bad S01E02.mkv
 ```
 
-Supported video types: `.mkv .mp4 .avi .m4v .webm .mov .ts .wmv`. Files with "sample" or "trailer" in the name are skipped. Junk like `1080p`,
+Supported video types: `.mkv .mp4 .avi .m4v .webm .mov .ts .wmv`. Files with "sample" or "trailer" in the name are skipped. Files under 20 MB are ignored (they are assumed to be clips or samples). Junk like `1080p`,
 `BluRay` or release-group tags in the name is stripped automatically.
 
 **Subtitles:** put `.srt` or `.vtt` files next to the video with the same base name
