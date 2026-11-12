@@ -481,7 +481,7 @@ async function autoSubs(){   // auto-fetch missing subtitles in configured langu
   }
 }
 // ---- direct play: let the browser play the original file when it can (instant start, native seeking)
-let DIRECT=false,directFailed=new Set(),directTimer=null;
+let DIRECT=false,directFailed=new Set(),directTimer=null,silentTimer=null;
 const okType=t=>{const r=v.canPlayType(t);return r==="probably"||r==="maybe"};
 function videoOK(){   // can this browser decode the video as-is (so we never have to re-encode it)?
   const vi=CUR.video||{};if(!vi.codec||directFailed.has("v"+CUR.id))return false;
@@ -498,7 +498,7 @@ function canDirect(){
   const vi=CUR.video||{},a=CUR.audio[audioIdx];
   if(!a||!vi.codec)return false;
   const ok=okType,vOK=videoOK();
-  const aOK=["aac","mp3","opus","vorbis","flac"].includes(a.codec)||(a.codec==="ac3"&&ok('audio/mp4; codecs="ac-3"'))||(a.codec==="eac3"&&ok('audio/mp4; codecs="ec-3"'));
+  const aOK=["aac","mp3","opus","vorbis","flac"].includes(a.codec);   // AC3/E-AC3/DTS: browsers often claim support via canPlayType but play silence, so those are always converted
   return vOK&&aOK;
 }
 function setMode(){$("#mode").textContent=DIRECT?"⚡ Direct play · original quality":(videoOK()?"⚙ Audio converted · video original quality":"⚙ Re-encoding video for browser")}
@@ -512,6 +512,7 @@ function load_at(t){
     v.src=`/file/${CUR.id}`;
     v.addEventListener("loadedmetadata",()=>{if(t>1)v.currentTime=t},{once:true});
     // if the browser can't actually play it, quietly fall back to the converted stream
+    clearTimeout(silentTimer);silentTimer=setTimeout(()=>{if(DIRECT&&v.currentTime>t+2&&!v.paused&&typeof v.webkitAudioDecodedByteCount==="number"&&v.webkitAudioDecodedByteCount===0)fallback(v.currentTime)},5000);   // video plays but no audio decoded: use the converted stream
     directTimer=setTimeout(()=>{if(DIRECT&&(v.readyState<3||v.currentTime===0&&v.paused===false)&&v.currentTime<=t+.5)fallback(t)},12000);
   }else{
     offset=Math.max(0,Math.min(t,CUR.duration-5||t));
